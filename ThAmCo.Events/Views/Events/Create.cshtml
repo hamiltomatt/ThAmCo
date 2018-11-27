@@ -1,4 +1,4 @@
-﻿@model ThAmCo.Events.Data.Event
+﻿@model ThAmCo.Events.Models.EventViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -29,7 +29,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="TypeId" class="control-label"></label>
-                <input asp-for="TypeId" class="form-control" />
+                <select asp-for="TypeId" asp-items="@Model.TypeSelectList" class="form-control"></select>
                 <span asp-validation-for="TypeId" class="text-danger"></span>
             </div>
             <div class="form-group">

@@ -26,6 +26,26 @@ namespace ThAmCo.Events.Controllers
             return View(await _context.Events.ToListAsync());
         }
 
+        public async Task<IEnumerable<EventTypeGetDto>> getEventTypes()
+        {
+            var eventTypes = new List<EventTypeGetDto>().AsEnumerable();
+
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new System.Uri("http://localhost:23652");
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+
+            HttpResponseMessage response = await client.GetAsync("api/EventTypes");
+            if (response.IsSuccessStatusCode)
+            {
+                eventTypes = await response.Content.ReadAsAsync<IEnumerable<EventTypeGetDto>>();
+                return eventTypes;
+            }
+            else
+            {
+                throw new Exception();
+            }
+        }
+
         // GET: Events/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -47,23 +67,11 @@ namespace ThAmCo.Events.Controllers
         // GET: Events/Create
         public async Task<IActionResult> Create()
         {
-            var eventTypes = new List<EventTypeGetDto>().AsEnumerable();
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new System.Uri("http://localhost:23652");
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-            HttpResponseMessage response = await client.GetAsync("api/EventTypes");
+            IEnumerable<EventTypeGetDto> eventTypes = await getEventTypes();
 
-            if (response.IsSuccessStatusCode)
-            {
-                eventTypes = await response.Content.ReadAsAsync<IEnumerable<EventTypeGetDto>>();
-            }
-            else
-            {
-                throw new Exception();
-            }
+            var typeSelectList = new SelectList(eventTypes, "Id", "Title");
 
-            ViewData["TypeId"] = new SelectList(eventTypes);
-            return View();
+            return View(new EventViewModel() { TypeSelectList = typeSelectList } );
         }
 
         // POST: Events/Create
@@ -71,15 +79,28 @@ namespace ThAmCo.Events.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Date,Duration,TypeId")] Event @event)
+        public async Task<IActionResult> Create([Bind("Id,Title,Date,Duration,TypeId")] EventViewModel eventVm)
         {
             if (ModelState.IsValid)
             {
+                var @event = new Event()
+                {
+                    Title = eventVm.Title,
+                    Date = eventVm.Date,
+                    Duration = eventVm.Duration,
+                    TypeId = eventVm.TypeId,
+                };
+
                 _context.Add(@event);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(@event);
+
+            IEnumerable<EventTypeGetDto> eventTypes = await getEventTypes();
+
+            eventVm.TypeSelectList = new SelectList(eventTypes, "Id", "Title");
+
+            return View(eventVm);
         }
 
         // GET: Events/Edit/5
@@ -95,7 +116,21 @@ namespace ThAmCo.Events.Controllers
             {
                 return NotFound();
             }
-            return View(@event);
+
+
+            IEnumerable<EventTypeGetDto> eventTypes = await getEventTypes();
+
+            var typeSelectList = new SelectList(eventTypes, "Id", "Title");
+
+            var eventVm = new EventViewModel()
+            {
+                Id = @event.Id,
+                Title = @event.Title,
+                Duration = @event.Duration,
+                TypeId = @event.TypeId,
+                TypeSelectList = typeSelectList
+            };
+            return View(eventVm);
         }
 
         // POST: Events/Edit/5
@@ -103,9 +138,9 @@ namespace ThAmCo.Events.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Date,Duration,TypeId")] Event @event)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Date,Duration,TypeId")] EventViewModel eventVm)
         {
-            if (id != @event.Id)
+            if (id != eventVm.Id)
             {
                 return NotFound();
             }
@@ -114,12 +149,21 @@ namespace ThAmCo.Events.Controllers
             {
                 try
                 {
-                    _context.Update(@event);
+                    var @event = new Event()
+                    {
+                        Title = eventVm.Title,
+                        Date = eventVm.Date,
+                        Duration = eventVm.Duration,
+                        TypeId = eventVm.TypeId,
+                    };
+
+                    _context.Add(@event);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EventExists(@event.Id))
+                    if (!EventExists(eventVm.Id))
                     {
                         return NotFound();
                     }
@@ -128,9 +172,8 @@ namespace ThAmCo.Events.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(@event);
+            return View(eventVm);
         }
 
         // GET: Events/Delete/5
