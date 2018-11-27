@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ThAmCo.Events.Data;
+using ThAmCo.Events.Models;
 
 namespace ThAmCo.Events.Controllers
 {
@@ -46,22 +47,22 @@ namespace ThAmCo.Events.Controllers
         // GET: Events/Create
         public async Task<IActionResult> Create()
         {
-            IEnumerable<String> eventTypes = null;
+            var eventTypes = new List<EventTypeGetDto>().AsEnumerable();
             HttpClient client = new HttpClient();
-            client.BaseAddress = new System.Uri("");
+            client.BaseAddress = new System.Uri("http://localhost:23652");
             client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
             HttpResponseMessage response = await client.GetAsync("api/EventTypes");
 
-            if(response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
-                eventTypes = await response.Content.ReadAsAsync();
+                eventTypes = await response.Content.ReadAsAsync<IEnumerable<EventTypeGetDto>>();
             }
             else
             {
                 throw new Exception();
             }
 
-            ViewData["TypeId"] = new SelectList();
+            ViewData["TypeId"] = new SelectList(eventTypes);
             return View();
         }
 
