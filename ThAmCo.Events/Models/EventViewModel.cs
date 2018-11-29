@@ -11,10 +11,13 @@ namespace ThAmCo.Events.Models
         [Required]
         public string Title { get; set; }
 
+        [Required]
         public DateTime Date { get; set; }
 
         public TimeSpan? Duration { get; set; }
 
+        [Required]
+        [Display(Name = "Type")]
         public string TypeId { get; set; }
 
         public SelectList TypeSelectList { get; set; }

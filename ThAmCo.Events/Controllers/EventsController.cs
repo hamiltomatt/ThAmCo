@@ -20,12 +20,6 @@ namespace ThAmCo.Events.Controllers
             _context = context;
         }
 
-        // GET: Events
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Events.ToListAsync());
-        }
-
         public async Task<IEnumerable<EventTypeGetDto>> getEventTypes()
         {
             var eventTypes = new List<EventTypeGetDto>().AsEnumerable();
@@ -46,6 +40,23 @@ namespace ThAmCo.Events.Controllers
             }
         }
 
+        // GET: Events
+        public async Task<IActionResult> Index()
+        {
+            IEnumerable<EventTypeGetDto> eventTypes = await getEventTypes();
+
+            var events = await _context.Events.Select(e => new EventViewModel
+            {
+                Id = e.Id,
+                Title = e.Title,
+                Date = e.Date,
+                Duration = e.Duration,
+                TypeId = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title
+            }).ToListAsync();
+
+            return View(events);
+        }
+
         // GET: Events/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -54,8 +65,18 @@ namespace ThAmCo.Events.Controllers
                 return NotFound();
             }
 
-            var @event = await _context.Events
-                .FirstOrDefaultAsync(m => m.Id == id);
+            IEnumerable<EventTypeGetDto> eventTypes = await getEventTypes();
+
+            var @event = await _context.Events.Select(e => new EventViewModel
+            {
+                Id = e.Id,
+                Title = e.Title,
+                Date = e.Date,
+                Duration = e.Duration,
+                TypeId = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title
+            }).FirstOrDefaultAsync();
+
+
             if (@event == null)
             {
                 return NotFound();
@@ -88,7 +109,7 @@ namespace ThAmCo.Events.Controllers
                     Title = eventVm.Title,
                     Date = eventVm.Date,
                     Duration = eventVm.Duration,
-                    TypeId = eventVm.TypeId,
+                    TypeId = eventVm.TypeId
                 };
 
                 _context.Add(@event);
@@ -117,19 +138,15 @@ namespace ThAmCo.Events.Controllers
                 return NotFound();
             }
 
-
-            IEnumerable<EventTypeGetDto> eventTypes = await getEventTypes();
-
-            var typeSelectList = new SelectList(eventTypes, "Id", "Title");
-
             var eventVm = new EventViewModel()
             {
                 Id = @event.Id,
                 Title = @event.Title,
+                Date = @event.Date,
                 Duration = @event.Duration,
-                TypeId = @event.TypeId,
-                TypeSelectList = typeSelectList
+                TypeId = @event.TypeId
             };
+
             return View(eventVm);
         }
 
@@ -140,9 +157,7 @@ namespace ThAmCo.Events.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Date,Duration,TypeId")] EventViewModel eventVm)
         {
-
-            var @currEvent = await _context.Events.FirstOrDefaultAsync(m => m.Id == id);
-            if((currEvent == null) || (id != eventVm.Id))
+            if (id != eventVm.Id)
             {
                 return NotFound();
             }
@@ -153,13 +168,14 @@ namespace ThAmCo.Events.Controllers
                 {
                     var @event = new Event()
                     {
+                        Id = eventVm.Id,
                         Title = eventVm.Title,
-                        Date = currEvent.Date,
+                        Date = eventVm.Date,
                         Duration = eventVm.Duration,
-                        TypeId = currEvent.TypeId
+                        TypeId = eventVm.TypeId
                     };
 
-                    _context.Add(@event);
+                    _context.Update(@event);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -186,8 +202,17 @@ namespace ThAmCo.Events.Controllers
                 return NotFound();
             }
 
-            var @event = await _context.Events
-                .FirstOrDefaultAsync(m => m.Id == id);
+            IEnumerable<EventTypeGetDto> eventTypes = await getEventTypes();
+
+            var @event = await _context.Events.Select(e => new EventViewModel
+            {
+                Id = e.Id,
+                Title = e.Title,
+                Date = e.Date,
+                Duration = e.Duration,
+                TypeId = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title
+            }).FirstOrDefaultAsync();
+
             if (@event == null)
             {
                 return NotFound();

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ThAmCo.Events.Data;
+using ThAmCo.Events.Models;
 
 namespace ThAmCo.Events
 {
@@ -21,7 +22,15 @@ namespace ThAmCo.Events
         // GET: Customers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Customers.ToListAsync());
+            var customers = await _context.Customers.Select(c => new CustomerViewModel
+            {
+                Id = c.Id,
+                Surname = c.Surname,
+                FirstName = c.FirstName,
+                Email = c.Email
+            }).ToListAsync();
+
+            return View(customers);
         }
 
         // GET: Customers/Details/5
@@ -32,8 +41,14 @@ namespace ThAmCo.Events
                 return NotFound();
             }
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var customer = await _context.Customers.Select(c => new CustomerViewModel
+            {
+                Id = c.Id,
+                Surname = c.Surname,
+                FirstName = c.FirstName,
+                Email = c.Email
+            }).FirstOrDefaultAsync();
+
             if (customer == null)
             {
                 return NotFound();
@@ -53,15 +68,23 @@ namespace ThAmCo.Events
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Surname,FirstName,Email")] Customer customer)
+        public async Task<IActionResult> Create([Bind("Id,Surname,FirstName,Email")] CustomerViewModel customerVm)
         {
             if (ModelState.IsValid)
             {
+                var customer = new Customer()
+                {
+                    Id = customerVm.Id,
+                    Surname = customerVm.Surname,
+                    FirstName = customerVm.FirstName,
+                    Email = customerVm.Email
+                };
+
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            return View(customerVm);
         }
 
         // GET: Customers/Edit/5
@@ -72,7 +95,14 @@ namespace ThAmCo.Events
                 return NotFound();
             }
 
-            var customer = await _context.Customers.FindAsync(id);
+            var customer = await _context.Customers.Select(c => new CustomerViewModel
+            {
+                Id = c.Id,
+                Surname = c.Surname,
+                FirstName = c.FirstName,
+                Email = c.Email
+            }).FirstOrDefaultAsync();
+
             if (customer == null)
             {
                 return NotFound();
@@ -85,9 +115,9 @@ namespace ThAmCo.Events
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Surname,FirstName,Email")] Customer customer)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Surname,FirstName,Email")] CustomerViewModel customerVm)
         {
-            if (id != customer.Id)
+            if (id != customerVm.Id)
             {
                 return NotFound();
             }
@@ -96,12 +126,20 @@ namespace ThAmCo.Events
             {
                 try
                 {
+                    var customer = new Customer()
+                    {
+                        Id = customerVm.Id,
+                        Surname = customerVm.Surname,
+                        FirstName = customerVm.FirstName,
+                        Email = customerVm.Email
+                    };
+
                     _context.Update(customer);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CustomerExists(customer.Id))
+                    if (!CustomerExists(customerVm.Id))
                     {
                         return NotFound();
                     }
@@ -112,7 +150,7 @@ namespace ThAmCo.Events
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            return View(customerVm);
         }
 
         // GET: Customers/Delete/5
@@ -123,8 +161,14 @@ namespace ThAmCo.Events
                 return NotFound();
             }
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var customer = await _context.Customers.Select(c => new CustomerViewModel
+            {
+                Id = c.Id,
+                Surname = c.Surname,
+                FirstName = c.FirstName,
+                Email = c.Email
+            }).FirstOrDefaultAsync();
+
             if (customer == null)
             {
                 return NotFound();
