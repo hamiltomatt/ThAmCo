@@ -140,7 +140,9 @@ namespace ThAmCo.Events.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Date,Duration,TypeId")] EventViewModel eventVm)
         {
-            if (id != eventVm.Id)
+
+            var @currEvent = await _context.Events.FirstOrDefaultAsync(m => m.Id == id);
+            if((currEvent == null) || (id != eventVm.Id))
             {
                 return NotFound();
             }
@@ -152,9 +154,9 @@ namespace ThAmCo.Events.Controllers
                     var @event = new Event()
                     {
                         Title = eventVm.Title,
-                        Date = eventVm.Date,
+                        Date = currEvent.Date,
                         Duration = eventVm.Duration,
-                        TypeId = eventVm.TypeId,
+                        TypeId = currEvent.TypeId
                     };
 
                     _context.Add(@event);
