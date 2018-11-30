@@ -67,13 +67,19 @@ namespace ThAmCo.Events.Controllers
 
             IEnumerable<EventTypeGetDto> eventTypes = await getEventTypes();
 
-            var @event = await _context.Events.Select(e => new EventViewModel
+            var @event = await _context.Events.Select(e => new EventDetailsViewModel
             {
                 Id = e.Id,
                 Title = e.Title,
                 Date = e.Date,
                 Duration = e.Duration,
-                TypeId = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title
+                TypeId = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title,
+                Bookings = e.Bookings.Select(b => new EventGuestViewModel
+                {
+                    CustomerId = b.CustomerId,
+                    CustomerName = b.Customer.FullName,
+                    Attended = b.Attended
+                })
             }).FirstOrDefaultAsync(e => e.Id == id);
 
 
@@ -138,7 +144,7 @@ namespace ThAmCo.Events.Controllers
                 return NotFound();
             }
 
-            var eventVm = new EventViewModel()
+            var eventVm = new EventEditViewModel()
             {
                 Id = @event.Id,
                 Title = @event.Title,

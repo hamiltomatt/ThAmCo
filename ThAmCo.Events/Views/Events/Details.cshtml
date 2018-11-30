@@ -1,4 +1,4 @@
-﻿@model ThAmCo.Events.Models.EventViewModel
+﻿@model ThAmCo.Events.Models.EventDetailsViewModel
 
 @{
     ViewData["Title"] = "Event Details";
@@ -36,6 +36,45 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @if (Model.Bookings.Any())
+    {
+    <h4>Event Bookings</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Attended
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Bookings)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CustomerName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Attended)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", "Customers", new { id = item.CustomerId })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    }
+    else
+    {
+        <h4>No current bookings.</h4>
+    }
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
 </div>
