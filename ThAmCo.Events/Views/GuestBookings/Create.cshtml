@@ -1,0 +1,44 @@
+﻿@model ThAmCo.Events.Models.GuestBookingViewModel
+
+@{
+    ViewData["Title"] = "Create Booking";
+}
+
+<h2>Create New</h2>
+
+<h4>Booking for @Model.CustomerName</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <input type="hidden" asp-for="CustomerId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*<div class="form-group">
+                <label asp-for="CustomerId" class="control-label"></label>
+                <select asp-for="CustomerId" class ="form-control" asp-items="ViewBag.CustomerId"></select>
+            </div>*@
+            <div class="form-group">
+                <label asp-for="EventId" class="control-label"></label>
+                <select asp-for="EventId" class ="form-control" asp-items="@Model.EventSelectList"></select>
+            </div>
+            @*<div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Attended" /> @Html.DisplayNameFor(model => model.Attended)
+                    </label>
+                </div>
+            </div>*@
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Customers" asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

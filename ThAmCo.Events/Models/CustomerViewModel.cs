@@ -8,6 +8,7 @@ namespace ThAmCo.Events.Models
         public int Id { get; set; }
 
         [Required]
+        [Display(Name = "Last Name")]
         public string Surname { get; set; }
 
         [Required]

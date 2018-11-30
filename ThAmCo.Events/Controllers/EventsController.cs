@@ -74,7 +74,7 @@ namespace ThAmCo.Events.Controllers
                 Date = e.Date,
                 Duration = e.Duration,
                 TypeId = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title
-            }).FirstOrDefaultAsync();
+            }).FirstOrDefaultAsync(e => e.Id == id);
 
 
             if (@event == null)
@@ -142,9 +142,7 @@ namespace ThAmCo.Events.Controllers
             {
                 Id = @event.Id,
                 Title = @event.Title,
-                Date = @event.Date,
-                Duration = @event.Duration,
-                TypeId = @event.TypeId
+                Duration = @event.Duration
             };
 
             return View(eventVm);
@@ -155,7 +153,7 @@ namespace ThAmCo.Events.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Date,Duration,TypeId")] EventViewModel eventVm)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Duration")] EventEditViewModel eventVm)
         {
             if (id != eventVm.Id)
             {
@@ -166,14 +164,9 @@ namespace ThAmCo.Events.Controllers
             {
                 try
                 {
-                    var @event = new Event()
-                    {
-                        Id = eventVm.Id,
-                        Title = eventVm.Title,
-                        Date = eventVm.Date,
-                        Duration = eventVm.Duration,
-                        TypeId = eventVm.TypeId
-                    };
+                    var @event = await _context.Events.FindAsync(id);
+                    @event.Title = eventVm.Title;
+                    @event.Duration = eventVm.Duration;
 
                     _context.Update(@event);
                     await _context.SaveChangesAsync();
@@ -211,7 +204,7 @@ namespace ThAmCo.Events.Controllers
                 Date = e.Date,
                 Duration = e.Duration,
                 TypeId = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title
-            }).FirstOrDefaultAsync();
+            }).FirstOrDefaultAsync(e => e.Id == id);
 
             if (@event == null)
             {

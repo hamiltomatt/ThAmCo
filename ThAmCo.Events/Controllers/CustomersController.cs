@@ -47,7 +47,7 @@ namespace ThAmCo.Events
                 Surname = c.Surname,
                 FirstName = c.FirstName,
                 Email = c.Email
-            }).FirstOrDefaultAsync();
+            }).FirstOrDefaultAsync(c => c.Id == id);
 
             if (customer == null)
             {
@@ -101,7 +101,7 @@ namespace ThAmCo.Events
                 Surname = c.Surname,
                 FirstName = c.FirstName,
                 Email = c.Email
-            }).FirstOrDefaultAsync();
+            }).FirstOrDefaultAsync(c => c.Id == id);
 
             if (customer == null)
             {
