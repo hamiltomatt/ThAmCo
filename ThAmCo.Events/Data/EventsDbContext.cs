@@ -9,8 +9,12 @@ namespace ThAmCo.Events.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<GuestBooking> Guests { get; set; }
-
         private IHostingEnvironment HostEnv { get; }
+
+        public EventsDbContext()
+        {
+
+        }
 
         public EventsDbContext(DbContextOptions<EventsDbContext> options,
                                IHostingEnvironment env) : base(options)

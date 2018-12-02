@@ -11,18 +11,21 @@ namespace ThAmCo.Events.Models
     {
         public int Id { get; set; }
 
-        [Required]
         public string Title { get; set; }
 
-        [Required]
+        [DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime Date { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:g}")]
         public TimeSpan? Duration { get; set; }
 
         [Display(Name = "Type")]
         [Required, MaxLength(3), MinLength(3)]
         public string TypeId { get; set; }
 
-        public IEnumerable<EventGuestViewModel> Bookings { get; set; }
+        [Display(Name = "Guests")]
+        public int NoOfGuests { get; set; }
+
+        public IEnumerable<EventGuestViewModel> Guests { get; set; }
     }
 }

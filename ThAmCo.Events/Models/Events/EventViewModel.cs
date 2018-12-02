@@ -8,15 +8,17 @@ namespace ThAmCo.Events.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Date is required")]
+        [DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime Date { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:g}")]
         public TimeSpan? Duration { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Event type is required")]
         [Display(Name = "Type")]
         public string TypeId { get; set; }
 

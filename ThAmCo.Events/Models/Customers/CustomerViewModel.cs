@@ -7,15 +7,15 @@ namespace ThAmCo.Events.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Last name is required")]
         [Display(Name = "Last Name")]
         public string Surname { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "First name is required")]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Email is required")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 

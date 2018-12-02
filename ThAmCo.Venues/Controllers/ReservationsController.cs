@@ -24,7 +24,10 @@ namespace ThAmCo.Venues.Controllers
         [HttpGet("{reference}")]
         public async Task<IActionResult> GetReservation([FromRoute] string reference)
         {
-            var reservation = await _context.Reservations.FindAsync(reference);
+            var reservation = await _context.Reservations
+                                            .Include(r => r.Availability)
+                                            .ThenInclude(a => a.Venue)
+                                            .FirstOrDefaultAsync(r => r.Reference == reference);
             if (reservation == null)
             {
                 return NotFound();
@@ -43,6 +46,7 @@ namespace ThAmCo.Venues.Controllers
 
             var availability = await _context.Availabilities
                                              .Include(a => a.Reservation)
+                                             .Include(a => a.Venue)
                                              .FirstOrDefaultAsync(
                                                 a => a.Date == reservation.EventDate
                                                      && a.VenueCode == reservation.VenueCode);
@@ -70,16 +74,20 @@ namespace ThAmCo.Venues.Controllers
         [HttpDelete("{reference}")]
         public async Task<IActionResult> DeleteReservation([FromRoute] string reference)
         {
-            var reservation = await _context.Reservations.FindAsync(reference);
+            var reservation = await _context.Reservations
+                                            .Include(r => r.Availability)
+                                            .ThenInclude(a => a.Venue)
+                                            .FirstOrDefaultAsync(r => r.Reference == reference);
             if (reservation == null)
             {
                 return NotFound();
             }
 
+            var dto = ReservationGetDto.FromModel(reservation);
             _context.Reservations.Remove(reservation);
             await _context.SaveChangesAsync();
 
-            return Ok(ReservationGetDto.FromModel(reservation));
+            return Ok(dto);
         }
     }
 }

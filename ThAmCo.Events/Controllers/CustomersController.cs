@@ -41,12 +41,19 @@ namespace ThAmCo.Events
                 return NotFound();
             }
 
-            var customer = await _context.Customers.Select(c => new CustomerViewModel
+            var customer = await _context.Customers.Select(c => new CustomerDetailsViewModel
             {
                 Id = c.Id,
                 Surname = c.Surname,
                 FirstName = c.FirstName,
-                Email = c.Email
+                Email = c.Email,
+                Events = c.Bookings.Select(b => new GuestEventViewModel
+                {
+                    EventId = b.EventId,
+                    EventName = b.Event.Title,
+                    EventDate = b.Event.Date,
+                    Attended = b.Attended
+                })
             }).FirstOrDefaultAsync(c => c.Id == id);
 
             if (customer == null)

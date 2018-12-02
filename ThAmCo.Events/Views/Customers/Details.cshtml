@@ -1,33 +1,45 @@
-﻿@model ThAmCo.Events.Models.CustomerViewModel
+﻿@model ThAmCo.Events.Models.CustomerDetailsViewModel
 
 @{
     ViewData["Title"] = "Customer Details";
 }
 
 <h2>Customer Details</h2>
-
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Surname)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Surname)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-    </dl>
+<div class="row">
+    <div class="col-md-4">
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.FirstName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Surname)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Surname)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <hr />
+        @if (Model.Events.Any())
+        {
+            <partial name="_EventList" for="Events" />
+        }
+        else
+        {
+            <h4>No current bookings.</h4>
+        }
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

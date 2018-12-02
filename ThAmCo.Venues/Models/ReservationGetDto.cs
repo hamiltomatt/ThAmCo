@@ -13,6 +13,12 @@ namespace ThAmCo.Venues.Models
 
         public string VenueCode { get; set; }
 
+        public string VenueName { get; set; }
+
+        public int VenueCapacity { get; set; }
+
+        public double VenueCostPerHour { get; set; }
+
         public DateTime WhenMade { get; set; }
 
         public string StaffId { get; set; }
@@ -24,6 +30,9 @@ namespace ThAmCo.Venues.Models
                 Reference = reservation.Reference,
                 EventDate = reservation.EventDate,
                 VenueCode = reservation.VenueCode,
+                VenueName = reservation.Availability.Venue.Name,
+                VenueCapacity = reservation.Availability.Venue.Capacity,
+                VenueCostPerHour = reservation.Availability.CostPerHour,
                 WhenMade = reservation.WhenMade,
                 StaffId = reservation.StaffId
             };

@@ -6,75 +6,55 @@
 
 <h2>Event Details</h2>
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Date)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Duration)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Duration)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TypeId)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TypeId)
-        </dd>
-    </dl>
+<div class="row">
+    <div class="col-md-4">
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Date)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Date)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Duration)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Duration)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.TypeId)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.TypeId)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.NoOfGuests)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.NoOfGuests)
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-4">
+        <hr />
+        @if (Model.Guests.Any())
+        {
+            <partial name="_GuestList" for="Guests" />
+        }
+        else
+        {
+            <h4>No current bookings.</h4>
+        }
+    </div>
 </div>
 <div>
-    @if (Model.Bookings.Any())
-    {
-    <h4>Event Bookings</h4>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Attended
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Bookings)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CustomerName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Attended)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Details", "Details", "Customers", new { id = item.CustomerId })
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    }
-    else
-    {
-        <h4>No current bookings.</h4>
-    }
-    <div>
-        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-        <a asp-action="Index">Back to List</a>
-    </div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
 </div>

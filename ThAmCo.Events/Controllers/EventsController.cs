@@ -74,7 +74,8 @@ namespace ThAmCo.Events.Controllers
                 Date = e.Date,
                 Duration = e.Duration,
                 TypeId = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title,
-                Bookings = e.Bookings.Select(b => new EventGuestViewModel
+                NoOfGuests = e.Bookings.Count,
+                Guests = e.Bookings.Select(b => new EventGuestViewModel
                 {
                     CustomerId = b.CustomerId,
                     CustomerName = b.Customer.FullName,
