@@ -77,5 +77,65 @@ namespace ThAmCo.Events.Controllers
             return View(gbVm);
         }
 
+        public async Task<IActionResult> MarkAttended(int? id, int? eventId)
+        {
+            if (id == null || eventId == null)
+            {
+                return NotFound();
+            }
+
+            var booking = await _context.Guests.FindAsync(id, eventId);
+            if (booking == null)
+            {
+                return NotFound();
+            }
+
+            booking.Attended = true;
+            _context.Update(booking);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", "Customers", _context.Customers.Find(booking.CustomerId));
+        }
+
+        // GET: GuestBookings/Delete/5?eventId=5
+        public async Task<IActionResult> Delete(int? id, int? eventId)
+        {
+            if(id == null || eventId == null)
+            {
+                return NotFound();
+            }
+
+            var booking = await _context.Guests
+                .Select(b => new GuestBookingViewModel
+                {
+                    CustomerId = b.CustomerId,
+                    CustomerName = _context.Customers.Where(c => c.Id == id).FirstOrDefault().FullName,
+                    EventId = b.EventId,
+                    EventName = b.Event.Title,
+                }).FirstOrDefaultAsync(c => c.CustomerId == id && c.EventId == eventId);
+
+            if(booking == null)
+            {
+                return NotFound();
+            }
+
+            return View(booking);
+        }
+
+        // POST: GuestBookings/Delete/5?eventId=5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id, int eventId)
+        {
+            var booking = await _context.Guests.FindAsync(id, eventId);
+            if(booking == null)
+            {
+                return NotFound();
+            }
+
+            _context.Guests.Remove(booking);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", "Events", _context.Events.Find(booking.EventId));
+        }
+
     }
 }

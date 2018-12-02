@@ -8,6 +8,8 @@ namespace ThAmCo.Events.Models
 {
     public class GuestEventViewModel
     {
+        public int CustomerId { get; set; }
+
         public int EventId { get; set; }
 
         [Display(Name = "Name")]

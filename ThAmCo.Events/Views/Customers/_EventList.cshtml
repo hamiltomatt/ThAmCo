@@ -28,6 +28,11 @@
                 @(item.Attended?"Yes":"No")
             </td>
             <td>
+                @if(!item.Attended)
+                {
+                    @Html.ActionLink("Mark as Attended", "MarkAttended", "GuestBookings", 
+                    new { id = item.CustomerId, eventId = item.EventId })<text> | </text>;
+                }
                 @Html.ActionLink("Details", "Details", "Events", new { id = item.EventId })
             </td>
         </tr>

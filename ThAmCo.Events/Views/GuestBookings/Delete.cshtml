@@ -1,0 +1,27 @@
+﻿@model ThAmCo.Events.Models.GuestBookingViewModel
+
+@{
+    ViewData["Title"] = "Cancel Booking";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to cancel this?</h3>
+<div>
+    <h4>Booking for @Model.CustomerName</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.EventName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EventName)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="EventId" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-controller="Events" asp-action="Index">Back to Events</a>
+    </form>
+</div>

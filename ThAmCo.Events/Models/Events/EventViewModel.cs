@@ -19,8 +19,7 @@ namespace ThAmCo.Events.Models
         public TimeSpan? Duration { get; set; }
 
         [Required(ErrorMessage = "Event type is required")]
-        [Display(Name = "Type")]
-        public string TypeId { get; set; }
+        public string Type { get; set; }
 
         public SelectList TypeSelectList { get; set; }
     }

@@ -30,16 +30,16 @@
             @Html.DisplayFor(model => model.Duration)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.TypeId)
+            @Html.DisplayNameFor(model => model.Type)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.TypeId)
+            @Html.DisplayFor(model => model.Type)
         </dd>
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index">Back to Events</a>
     </form>
 </div>

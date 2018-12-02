@@ -14,6 +14,8 @@ namespace ThAmCo.Events.Models
         [Display(Name="Name")]
         public String CustomerName { get; set; }
 
+        public int EventId { get; set; }
+
         [Display(Name = "Attended?")]
         public bool Attended { get; set; }
     }

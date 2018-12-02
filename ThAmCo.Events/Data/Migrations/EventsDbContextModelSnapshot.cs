@@ -16,7 +16,7 @@ namespace ThAmCo.Events.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("thamco.events")
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -82,6 +82,8 @@ namespace ThAmCo.Events.Data.Migrations
 
                     b.Property<bool>("Attended");
 
+                    b.Property<int>("Id");
+
                     b.HasKey("CustomerId", "EventId");
 
                     b.HasIndex("EventId");
@@ -89,10 +91,10 @@ namespace ThAmCo.Events.Data.Migrations
                     b.ToTable("Guests");
 
                     b.HasData(
-                        new { CustomerId = 1, EventId = 1, Attended = true },
-                        new { CustomerId = 2, EventId = 1, Attended = false },
-                        new { CustomerId = 1, EventId = 2, Attended = false },
-                        new { CustomerId = 3, EventId = 2, Attended = false }
+                        new { CustomerId = 1, EventId = 1, Attended = true, Id = 1 },
+                        new { CustomerId = 2, EventId = 1, Attended = false, Id = 2 },
+                        new { CustomerId = 1, EventId = 2, Attended = false, Id = 3 },
+                        new { CustomerId = 3, EventId = 2, Attended = false, Id = 4 }
                     );
                 });
 

@@ -49,6 +49,7 @@ namespace ThAmCo.Events
                 Email = c.Email,
                 Events = c.Bookings.Select(b => new GuestEventViewModel
                 {
+                    CustomerId = b.CustomerId,
                     EventId = b.EventId,
                     EventName = b.Event.Title,
                     EventDate = b.Event.Date,
@@ -174,7 +175,7 @@ namespace ThAmCo.Events
                 Surname = c.Surname,
                 FirstName = c.FirstName,
                 Email = c.Email
-            }).FirstOrDefaultAsync();
+            }).FirstOrDefaultAsync(c => c.Id == id);
 
             if (customer == null)
             {

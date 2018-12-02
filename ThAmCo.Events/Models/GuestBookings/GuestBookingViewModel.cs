@@ -17,6 +17,9 @@ namespace ThAmCo.Events.Models
         [Display(Name = "Event")]
         public int EventId { get; set; }
 
+        [Display(Name = "Event Name")]
+        public string EventName { get; set; }
+
         public SelectList CustomerSelectList { get; set; }
 
         public SelectList EventSelectList { get; set; }

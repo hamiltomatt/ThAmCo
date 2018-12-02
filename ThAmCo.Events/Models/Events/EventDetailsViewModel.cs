@@ -19,9 +19,8 @@ namespace ThAmCo.Events.Models
         [DisplayFormat(DataFormatString = "{0:g}")]
         public TimeSpan? Duration { get; set; }
 
-        [Display(Name = "Type")]
         [Required, MaxLength(3), MinLength(3)]
-        public string TypeId { get; set; }
+        public string Type { get; set; }
 
         [Display(Name = "Guests")]
         public int NoOfGuests { get; set; }

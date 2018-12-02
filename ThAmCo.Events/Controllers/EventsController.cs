@@ -51,7 +51,7 @@ namespace ThAmCo.Events.Controllers
                 Title = e.Title,
                 Date = e.Date,
                 Duration = e.Duration,
-                TypeId = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title
+                Type = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title
             }).ToListAsync();
 
             return View(events);
@@ -73,12 +73,13 @@ namespace ThAmCo.Events.Controllers
                 Title = e.Title,
                 Date = e.Date,
                 Duration = e.Duration,
-                TypeId = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title,
+                Type = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title,
                 NoOfGuests = e.Bookings.Count,
                 Guests = e.Bookings.Select(b => new EventGuestViewModel
                 {
                     CustomerId = b.CustomerId,
                     CustomerName = b.Customer.FullName,
+                    EventId = b.EventId,
                     Attended = b.Attended
                 })
             }).FirstOrDefaultAsync(e => e.Id == id);
@@ -116,7 +117,7 @@ namespace ThAmCo.Events.Controllers
                     Title = eventVm.Title,
                     Date = eventVm.Date,
                     Duration = eventVm.Duration,
-                    TypeId = eventVm.TypeId
+                    TypeId = eventVm.Type
                 };
 
                 _context.Add(@event);
@@ -210,7 +211,7 @@ namespace ThAmCo.Events.Controllers
                 Title = e.Title,
                 Date = e.Date,
                 Duration = e.Duration,
-                TypeId = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title
+                Type = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title
             }).FirstOrDefaultAsync(e => e.Id == id);
 
             if (@event == null)

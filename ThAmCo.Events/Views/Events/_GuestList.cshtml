@@ -22,6 +22,7 @@
                 @(item.Attended?"Yes":"No")
             </td>
             <td>
+                @Html.ActionLink("Cancel", "Delete", "GuestBookings", new { id = item.CustomerId, eventId = item.EventId }) |
                 @Html.ActionLink("Details", "Details", "Customers", new { id = item.CustomerId })
             </td>
         </tr>

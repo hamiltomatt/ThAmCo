@@ -29,10 +29,10 @@
                 @Html.DisplayFor(model => model.Duration)
             </dd>
             <dt>
-                @Html.DisplayNameFor(model => model.TypeId)
+                @Html.DisplayNameFor(model => model.Type)
             </dt>
             <dd>
-                @Html.DisplayFor(model => model.TypeId)
+                @Html.DisplayFor(model => model.Type)
             </dd>
             <dt>
                 @Html.DisplayNameFor(model => model.NoOfGuests)
@@ -56,5 +56,5 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to Events</a>
 </div>
