@@ -15,7 +15,7 @@ namespace ThAmCo.Events.Models
         [DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime Date { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:g}")]
+        [DataType(DataType.Duration), DisplayFormat(DataFormatString = "{0:g}")]
         public TimeSpan? Duration { get; set; }
 
         [Required(ErrorMessage = "Event type is required")]

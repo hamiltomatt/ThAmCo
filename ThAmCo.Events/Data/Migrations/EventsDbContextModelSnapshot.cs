@@ -56,6 +56,9 @@ namespace ThAmCo.Events.Data.Migrations
 
                     b.Property<TimeSpan?>("Duration");
 
+                    b.Property<string>("Reservation")
+                        .HasMaxLength(13);
+
                     b.Property<string>("Title")
                         .IsRequired();
 
@@ -82,8 +85,6 @@ namespace ThAmCo.Events.Data.Migrations
 
                     b.Property<bool>("Attended");
 
-                    b.Property<int>("Id");
-
                     b.HasKey("CustomerId", "EventId");
 
                     b.HasIndex("EventId");
@@ -91,10 +92,10 @@ namespace ThAmCo.Events.Data.Migrations
                     b.ToTable("Guests");
 
                     b.HasData(
-                        new { CustomerId = 1, EventId = 1, Attended = true, Id = 1 },
-                        new { CustomerId = 2, EventId = 1, Attended = false, Id = 2 },
-                        new { CustomerId = 1, EventId = 2, Attended = false, Id = 3 },
-                        new { CustomerId = 3, EventId = 2, Attended = false, Id = 4 }
+                        new { CustomerId = 1, EventId = 1, Attended = true },
+                        new { CustomerId = 2, EventId = 1, Attended = false },
+                        new { CustomerId = 1, EventId = 2, Attended = false },
+                        new { CustomerId = 3, EventId = 2, Attended = false }
                     );
                 });
 

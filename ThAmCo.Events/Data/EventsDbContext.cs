@@ -9,6 +9,8 @@ namespace ThAmCo.Events.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<GuestBooking> Guests { get; set; }
+        public DbSet<Staff> Staff { get; set; }
+        public DbSet<Staffing> Staffings { get; set; }
         private IHostingEnvironment HostEnv { get; }
 
         public EventsDbContext()
@@ -36,10 +38,18 @@ namespace ThAmCo.Events.Data
             builder.Entity<GuestBooking>()
                    .HasKey(b => new { b.CustomerId, b.EventId });
 
+            builder.Entity<Staffing>()
+                    .HasKey(b => new { b.StaffId, b.EventId });
+
             builder.Entity<Customer>()
                    .HasMany(c => c.Bookings)
                    .WithOne(b => b.Customer)
                    .HasForeignKey(b => b.CustomerId);
+
+            builder.Entity<Staff>()
+                    .HasMany(s => s.Staffings)
+                    .WithOne(b => b.Staff)
+                    .HasForeignKey(b => b.StaffId);
 
             builder.Entity<Event>()
                    .HasMany(e => e.Bookings)
@@ -60,8 +70,12 @@ namespace ThAmCo.Events.Data
                 );
 
                 builder.Entity<Event>().HasData(
-                    new Event { Id = 1, Title = "Bob's Big 50", Date = new DateTime(2016, 4, 12), Duration = new TimeSpan(6, 0, 0), TypeId = "PTY" },
+                    new Event { Id = 1, Title = "Bob's Big 50", Date = new DateTime(2018, 12, 5), Duration = new TimeSpan(6, 0, 0), TypeId = "PTY" },
                     new Event { Id = 2, Title = "Best Wedding Yet", Date = new DateTime(2018, 12, 1), Duration = new TimeSpan(12, 0, 0), TypeId = "WED" }
+                );
+
+                builder.Entity<Staff>().HasData(
+                    new Staff { Id = 1, Surname = "Man", FirstName = "Dan", Email = "dan@example.com" }
                 );
 
                 builder.Entity<GuestBooking>().HasData(

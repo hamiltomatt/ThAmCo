@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using ThAmCo.Events.Data;
 using ThAmCo.Events.Models;
 
@@ -14,10 +15,12 @@ namespace ThAmCo.Events.Controllers
     public class EventsController : Controller
     {
         private readonly EventsDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public EventsController(EventsDbContext context)
+        public EventsController(EventsDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public async Task<IEnumerable<EventTypeGetDto>> getEventTypes()
@@ -25,7 +28,7 @@ namespace ThAmCo.Events.Controllers
             var eventTypes = new List<EventTypeGetDto>().AsEnumerable();
 
             HttpClient client = new HttpClient();
-            client.BaseAddress = new System.Uri("http://localhost:23652");
+            client.BaseAddress = new System.Uri(_configuration["VenuesBaseURI"]);
             client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
 
             HttpResponseMessage response = await client.GetAsync("api/EventTypes");
@@ -108,7 +111,7 @@ namespace ThAmCo.Events.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Date,Duration,TypeId")] EventViewModel eventVm)
+        public async Task<IActionResult> Create([Bind("Id,Title,Date,Duration,Type")] EventViewModel eventVm)
         {
             if (ModelState.IsValid)
             {

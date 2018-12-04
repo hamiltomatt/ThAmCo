@@ -19,7 +19,7 @@ namespace ThAmCo.Events.Controllers
             _context = context;
         }
 
-        // GET: GuestBookings/Create
+        // GET: GuestBookings/Create/5
         public IActionResult Create([FromQuery] int? customerId)
         {
             if(customerId == null)
@@ -41,7 +41,7 @@ namespace ThAmCo.Events.Controllers
             return View(gbVm);
         }
 
-        // POST: GuestBookings/Create
+        // POST: GuestBookings/Create/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -77,6 +77,7 @@ namespace ThAmCo.Events.Controllers
             return View(gbVm);
         }
 
+        //POST: GuestBookings/MarkAttended/5?eventId=5
         public async Task<IActionResult> MarkAttended(int? id, int? eventId)
         {
             if (id == null || eventId == null)
