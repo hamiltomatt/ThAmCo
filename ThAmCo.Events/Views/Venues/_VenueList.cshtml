@@ -4,7 +4,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.VenueCode)
+                @Html.DisplayNameFor(model => model.Date)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.VenueName)
@@ -24,26 +24,26 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VenueCode)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VenueName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Capacity)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CostPerHour)
-                </td>
-                <td>
-                    @Html.ActionLink("Book", "Create", new { id = item.EventId, venueCode = item.VenueCode })
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VenueName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Capacity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CostPerHour)
+            </td>
+            <td>
+                @Html.ActionLink("Book", "Create", new { eventId = item.EventId, venueCode = item.VenueCode })
+            </td>
+        </tr>
         }
     </tbody>
 </table>

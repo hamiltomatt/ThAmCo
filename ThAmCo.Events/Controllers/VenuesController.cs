@@ -39,8 +39,8 @@ namespace ThAmCo.Events.Controllers
 
             if (@event != null)
             {
-                uri = uri + "?eventType=" + @event.TypeId + "&beginDate=" + @event.Date
-                            + "&endDate=" + @event.Date;
+                uri = uri + "?eventType=" + @event.TypeId + "&beginDate=" + @event.Date.ToString("d-MMM-yyyy")
+                            + "&endDate=" + @event.Date.AddDays(7).ToString("d-MMM-yyyy");
             }
 
             HttpResponseMessage response = await client.GetAsync(uri);
@@ -56,8 +56,8 @@ namespace ThAmCo.Events.Controllers
             var venues = availableVenues.Select(v => new VenueEventViewModel
             {
                 EventId = id,
-                VenueCode = v.VenueCode,
-                VenueName = v.VenueName,
+                VenueCode = v.Code,
+                VenueName = v.Name,
                 Description = v.Description,
                 Capacity = v.Capacity,
                 Date = v.Date,
@@ -78,11 +78,13 @@ namespace ThAmCo.Events.Controllers
         //POST: Venues/Create/5?venueCode=5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id, venueCode")] VenueEventViewModel vEvm)
+        public async Task<IActionResult> Create([Bind("eventId, venueCode")] VenueEventViewModel vEvm)
         {
             if(ModelState.IsValid)
             {
+
                 var @event = await _context.Events.FindAsync(vEvm.EventId);
+
                 var dto = new ReservationPostDto
                 {
                     EventDate = @event.Date,

@@ -5,10 +5,10 @@
 }
 
 <h2>Book Venue for @Model.EventName</h2>
-<h4>on @Model.EventDate.ToShortDateString()</h4>
+<h4>on @Model.EventDate.ToShortDateString() - @Model.EventDate.AddDays(7).ToShortDateString()</h4>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-10">
         @if (Model.Venues.Any())
         {
             <partial name="_VenueList" for="Venues" />

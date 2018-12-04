@@ -10,7 +10,7 @@ namespace ThAmCo.Events.Models
     {
         public int EventId { get; set; }
 
-        public string VenueCode { get; set; }
+        public String VenueCode { get; set; }
 
         [Display(Name = "Venue")]
         public String VenueName { get; set; }
@@ -19,11 +19,12 @@ namespace ThAmCo.Events.Models
 
         public int Capacity { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime Date { get; set; }
 
         [DataType(DataType.Currency)]
-        [DisplayFormat(DataFormatString = "0:C")]
-        [Display(Name = "Cost per Hour")]
+        [DisplayFormat(DataFormatString = "{0:C}")]
+        [Display(Name = "Cost/h")]
         public double CostPerHour { get; set; }
     }
 }
