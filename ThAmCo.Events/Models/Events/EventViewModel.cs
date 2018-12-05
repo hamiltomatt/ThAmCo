@@ -11,11 +11,18 @@ namespace ThAmCo.Events.Models
         [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; }
 
+        [DataType(DataType.Date)]
         [Required(ErrorMessage = "Date is required")]
         [DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime Date { get; set; }
 
-        [DataType(DataType.Duration), DisplayFormat(DataFormatString = "{0:g}")]
+        [Display(Name = "Venue")]
+        public string VenueName { get; set; }
+
+        [Display(Name = "Guests")]
+        public int NoOfGuests { get; set; }
+
+        [DataType(DataType.Duration), DisplayFormat(DataFormatString = @"{0:hh\:mm}")]
         public TimeSpan? Duration { get; set; }
 
         [Required(ErrorMessage = "Event type is required")]

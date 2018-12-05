@@ -25,15 +25,21 @@ namespace ThAmCo.Events.Controllers
             _configuration = configuration;
         }
 
-        //GET: Venues/Create/5
-        public async Task<IActionResult> Create(int id)
+        public HttpClient getVenuesClient()
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new System.Uri(_configuration["VenuesBaseURI"]);
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+            return client;
+        }
+
+        //GET: Venues/Book/5
+        public async Task<IActionResult> Book(int id)
         {
             var @event = await _context.Events.FindAsync(id);
             var availableVenues = new List<VenueGetDto>().AsEnumerable();
 
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new System.Uri(_configuration["VenuesBaseURI"]);
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+            HttpClient client = getVenuesClient();
 
             string uri = "api/Availability";
 
@@ -75,34 +81,53 @@ namespace ThAmCo.Events.Controllers
             return View(eventVenues);
         }
 
-        //POST: Venues/Create/5?venueCode=5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("eventId, venueCode")] VenueEventViewModel vEvm)
+        //POST: Venues/BookConfirmed/5?venueCode=X&date=X
+        public async Task<IActionResult> BookConfirmed(int? id, string venueCode, DateTime date)
         {
-            if(ModelState.IsValid)
+            if(id == null || venueCode == null || date == null)
             {
+                return NotFound();
+            }
+            var @event = await _context.Events.FindAsync(id);
 
-                var @event = await _context.Events.FindAsync(vEvm.EventId);
+            HttpClient client = getVenuesClient();
 
-                var dto = new ReservationPostDto
+            if(@event.Reservation != null)
+            {
+                try
                 {
-                    EventDate = @event.Date,
-                    VenueCode = vEvm.VenueCode,
-                    StaffId = "aa"
-                };
-
-                HttpClient client = new HttpClient();
-                client.BaseAddress = new System.Uri(_configuration["VenuesBaseURI"]);
-                client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-
-                HttpResponseMessage postResponse = await client.PostAsJsonAsync("api/Reservations", dto);
-
-                postResponse.EnsureSuccessStatusCode();
+                    HttpResponseMessage deleteResponse = await client.DeleteAsync("api/Reservations/" + @event.Reservation);
+                    deleteResponse.EnsureSuccessStatusCode();
+                }
+                catch(Exception)
+                {
+                    return NotFound();
+                }
             }
 
-            return RedirectToAction("Details", "Events", vEvm.EventId);
- 
+
+            var dto = new ReservationPostDto
+            {
+                EventDate = date,
+                VenueCode = venueCode,
+                StaffId = "1"
+            };
+
+            HttpResponseMessage postResponse = await client.PostAsJsonAsync("api/Reservations", dto);
+            if(postResponse.IsSuccessStatusCode)
+            {
+                @event.Date = date;
+                @event.Reservation = $"{venueCode}{date:yyyyMMdd}";
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            _context.Events.Update(@event);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", "Events", @event);
         }
+
     }
 }

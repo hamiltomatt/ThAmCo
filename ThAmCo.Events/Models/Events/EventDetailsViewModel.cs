@@ -16,14 +16,17 @@ namespace ThAmCo.Events.Models
         [DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime Date { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:g}")]
+        [Display(Name = "Venue")]
+        public string VenueName { get; set; }
+
+        [Display(Name = "Guests")]
+        public int NoOfGuests { get; set; }
+
+        [DisplayFormat(DataFormatString = @"{0:hh\:mm}", ApplyFormatInEditMode = true)]
         public TimeSpan? Duration { get; set; }
 
         [Required, MaxLength(3), MinLength(3)]
         public string Type { get; set; }
-
-        [Display(Name = "Guests")]
-        public int NoOfGuests { get; set; }
 
         public IEnumerable<EventGuestViewModel> Guests { get; set; }
     }

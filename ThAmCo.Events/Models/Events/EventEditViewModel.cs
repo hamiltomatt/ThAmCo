@@ -14,7 +14,7 @@ namespace ThAmCo.Events.Models
         [Required]
         public string Title { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Duration)]
         public TimeSpan? Duration { get; set; }
 
     }

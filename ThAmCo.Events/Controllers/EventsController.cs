@@ -43,6 +43,30 @@ namespace ThAmCo.Events.Controllers
             }
         }
 
+        public async Task<string> getVenueName(string reference)
+        {
+            var reservation = new ReservationGetDto();
+            if (reference != null)
+            {
+
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new System.Uri(_configuration["VenuesBaseURI"]);
+                client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+
+                HttpResponseMessage response = await client.GetAsync("api/Reservations/" + reference);
+                if (response.IsSuccessStatusCode)
+                {
+                    reservation = await response.Content.ReadAsAsync<ReservationGetDto>();
+                    return reservation.VenueName;
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+            return null;
+        }
+
         // GET: Events
         public async Task<IActionResult> Index()
         {
@@ -53,6 +77,8 @@ namespace ThAmCo.Events.Controllers
                 Id = e.Id,
                 Title = e.Title,
                 Date = e.Date,
+                VenueName = getVenueName(e.Reservation).Result ?? "No Venue",
+                NoOfGuests = e.Bookings.Count,
                 Duration = e.Duration,
                 Type = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title
             }).ToListAsync();
@@ -75,9 +101,10 @@ namespace ThAmCo.Events.Controllers
                 Id = e.Id,
                 Title = e.Title,
                 Date = e.Date,
+                VenueName = getVenueName(e.Reservation).Result ?? "No Venue",
+                NoOfGuests = e.Bookings.Count,
                 Duration = e.Duration,
                 Type = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title,
-                NoOfGuests = e.Bookings.Count,
                 Guests = e.Bookings.Select(b => new EventGuestViewModel
                 {
                     CustomerId = b.CustomerId,
@@ -213,6 +240,8 @@ namespace ThAmCo.Events.Controllers
                 Id = e.Id,
                 Title = e.Title,
                 Date = e.Date,
+                VenueName = getVenueName(e.Reservation).Result ?? "No Venue",
+                NoOfGuests = e.Bookings.Count,
                 Duration = e.Duration,
                 Type = eventTypes.Where(t => t.Id == e.TypeId).FirstOrDefault().Title
             }).FirstOrDefaultAsync(e => e.Id == id);
@@ -231,11 +260,34 @@ namespace ThAmCo.Events.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var @event = await _context.Events.FindAsync(id);
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new System.Uri(_configuration["VenuesBaseURI"]);
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+
+            if (@event.Reservation != null)
+            {
+                try
+                {
+                    HttpResponseMessage deleteResponse = await client.DeleteAsync("api/Reservations/"
+                                                            + @event.Reservation);
+                    deleteResponse.EnsureSuccessStatusCode();
+                }
+                catch(Exception)
+                {
+                    return NotFound();
+                }
+            }
+
             _context.Events.Remove(@event);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Checking if an event for an id exists in the current database context
+        /// </summary>
+        /// <param name="id">Id of event</param>
+        /// <returns>If event does exist</returns>
         private bool EventExists(int id)
         {
             return _context.Events.Any(e => e.Id == id);

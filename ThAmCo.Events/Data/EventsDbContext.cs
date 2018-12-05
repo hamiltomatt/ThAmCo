@@ -75,7 +75,7 @@ namespace ThAmCo.Events.Data
                 );
 
                 builder.Entity<Staff>().HasData(
-                    new Staff { Id = 1, Surname = "Man", FirstName = "Dan", Email = "dan@example.com" }
+                    new Staff { Id = 1, Surname = "Foreman", FirstName = "Dan", Email = "dan@example.com" }
                 );
 
                 builder.Entity<GuestBooking>().HasData(
