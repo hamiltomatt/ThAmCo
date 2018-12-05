@@ -14,12 +14,21 @@ namespace ThAmCo.Events
     {
         private readonly EventsDbContext _context;
 
+        /// <summary>
+        /// Constructs the controller by providing it with an entity framework context
+        /// </summary>
+        /// <param name="context">The EF context which will connect to the database</param>
         public CustomersController(EventsDbContext context)
         {
             _context = context;
         }
 
         // GET: Customers
+        /// <summary>
+        /// Creates a list of all customers by going into the database context, getting the Customer objects,
+        /// and then projecting those into a model appropriate for the Index view
+        /// </summary>
+        /// <returns>Task which returns if it was successful</returns>
         public async Task<IActionResult> Index()
         {
             var customers = await _context.Customers.Select(c => new CustomerViewModel
@@ -34,6 +43,12 @@ namespace ThAmCo.Events
         }
 
         // GET: Customers/Details/5
+        /// <summary>
+        /// Creates list of attributes for a particular customer, by projecting from the context into the
+        /// model designed to be appropriate for the view.
+        /// </summary>
+        /// <param name="id">Id of customer</param>
+        /// <returns>Task which returns if success</returns>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -66,6 +81,10 @@ namespace ThAmCo.Events
         }
 
         // GET: Customers/Create
+        /// <summary>
+        /// Calls the "Create" view, which will open a blank form.
+        /// </summary>
+        /// <returns>If method was success</returns>
         public IActionResult Create()
         {
             return View();
@@ -74,6 +93,12 @@ namespace ThAmCo.Events
         // POST: Customers/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Creates a new customer by binding values to a model object, projecting those into the database model,
+        /// adding it to context and saving changes, and returning to view if invalid entry.
+        /// </summary>
+        /// <param name="customerVm">Object which will take new values</param>
+        /// <returns>If task was success</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Surname,FirstName,Email")] CustomerViewModel customerVm)
@@ -96,6 +121,11 @@ namespace ThAmCo.Events
         }
 
         // GET: Customers/Edit/5
+        /// <summary>
+        /// Edit data of a customer with a given id, which first projects into view model and sends to view.
+        /// </summary>
+        /// <param name="id">Id of customer</param>
+        /// <returns>If action was success</returns>
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -121,6 +151,13 @@ namespace ThAmCo.Events
         // POST: Customers/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Edits a customer by binding given values to a new model, projecting into database model, updates
+        /// context and saves changes to database.
+        /// </summary>
+        /// <param name="id">Id of customer</param>
+        /// <param name="customerVm">Object wth binded values</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Surname,FirstName,Email")] CustomerViewModel customerVm)
@@ -162,6 +199,11 @@ namespace ThAmCo.Events
         }
 
         // GET: Customers/Delete/5
+        /// <summary>
+        /// Deletes a customer by finding it from database, projecting into view model, and pushed to view.
+        /// </summary>
+        /// <param name="id">Id of customer</param>
+        /// <returns>If operation was successful</returns>
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -186,6 +228,12 @@ namespace ThAmCo.Events
         }
 
         // POST: Customers/Delete/5
+        /// <summary>
+        /// Gets id back from view, and removes relevant customer from database context, saves changes and redirects
+        /// to customer index.
+        /// </summary>
+        /// <param name="id">Id of customer</param>
+        /// <returns>If operation was successful</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

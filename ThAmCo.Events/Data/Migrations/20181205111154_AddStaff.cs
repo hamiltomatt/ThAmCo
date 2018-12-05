@@ -72,6 +72,18 @@ namespace ThAmCo.Events.Data.Migrations
                 columns: new[] { "Id", "Email", "FirstName", "IsFirstAider", "Surname" },
                 values: new object[] { 1, "dan@example.com", "Dan", false, "Foreman" });
 
+            migrationBuilder.InsertData(
+                schema: "thamco.events",
+                table: "Staff",
+                columns: new[] { "Id", "Email", "FirstName", "IsFirstAider", "Surname" },
+                values: new object[] { 2, "hamilton@outlook.com", "Matthew", true, "Hamilton" });
+
+            migrationBuilder.InsertData(
+                schema: "thamco.events",
+                table: "Staffings",
+                columns: new[] { "StaffId", "EventId" },
+                values: new object[] { 1, 1 });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Staffings_EventId",
                 schema: "thamco.events",

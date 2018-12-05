@@ -1,0 +1,33 @@
+﻿@model ThAmCo.Events.Models.StaffingViewModel
+
+@{
+    ViewData["Title"] = "Create Staff Booking";
+}
+
+<h2>Create New</h2>
+
+<h4>Staff Booking</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <input type="hidden" asp-for="EventId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StaffId" class="control-label"></label>
+                <select asp-for="StaffId" class="form-control" asp-items="@Model.StaffSelectList"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Events" asp-action="Index">Back to Events</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

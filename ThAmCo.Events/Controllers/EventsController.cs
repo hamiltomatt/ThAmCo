@@ -17,12 +17,24 @@ namespace ThAmCo.Events.Controllers
         private readonly EventsDbContext _context;
         private readonly IConfiguration _configuration;
 
+        /// <summary>
+        /// Constructor which takes the context for the entity framework model, and the configuration file
+        /// which specifies the location of our WebAPI services.
+        /// </summary>
+        /// <param name="context">Database EF context</param>
+        /// <param name="configuration">Local appsettings file</param>
         public EventsController(EventsDbContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Gets list of all event types from web service, by specifying its URI and using GetAsync,
+        /// which will bring down all types into a list, which is captured by an IEnumerable of the
+        /// eventTypeGetDto data transfer object.
+        /// </summary>
+        /// <returns>A list of EventTypeGetDto objects</returns>
         public async Task<IEnumerable<EventTypeGetDto>> getEventTypes()
         {
             var eventTypes = new List<EventTypeGetDto>().AsEnumerable();
@@ -43,6 +55,12 @@ namespace ThAmCo.Events.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets venue name of a specific reservation by giving it a reference string, which is used to query
+        /// the web service, where the data read in will be read out into the ReservationGetDto type object.
+        /// </summary>
+        /// <param name="reference">The reference of a reservation</param>
+        /// <returns>String of venue name</returns>
         public async Task<string> getVenueName(string reference)
         {
             var reservation = new ReservationGetDto();
@@ -68,6 +86,11 @@ namespace ThAmCo.Events.Controllers
         }
 
         // GET: Events
+        /// <summary>
+        /// Gets index of events by projecting all events from EF context into event view model, and 
+        /// gives it to view. Also uses eventTypes to get the venue title of event
+        /// </summary>
+        /// <returns>If was successful</returns>
         public async Task<IActionResult> Index()
         {
             IEnumerable<EventTypeGetDto> eventTypes = await getEventTypes();
@@ -87,6 +110,13 @@ namespace ThAmCo.Events.Controllers
         }
 
         // GET: Events/Details/5
+        /// <summary>
+        /// Gets detail of event by providing with event id, then projects database information into
+        /// event details view model, which will modify the result for the view. It will also populate
+        /// the Guests list (event's guests) and its Staff list (staff working event), and then send to view
+        /// </summary>
+        /// <param name="id">Id of event</param>
+        /// <returns>If success</returns>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -111,6 +141,12 @@ namespace ThAmCo.Events.Controllers
                     CustomerName = b.Customer.FullName,
                     EventId = b.EventId,
                     Attended = b.Attended
+                }),
+                Staff = e.Staffings.Select(s => new EventStaffViewModel
+                {
+                    StaffId = s.StaffId,
+                    StaffName = s.Staff.FullName,
+                    EventId = s.EventId
                 })
             }).FirstOrDefaultAsync(e => e.Id == id);
 
@@ -124,6 +160,10 @@ namespace ThAmCo.Events.Controllers
         }
 
         // GET: Events/Create
+        /// <summary>
+        /// Creates empty event form with SelectList populated with EventTypes, and sent to view
+        /// </summary>
+        /// <returns>If success</returns>
         public async Task<IActionResult> Create()
         {
             IEnumerable<EventTypeGetDto> eventTypes = await getEventTypes();
@@ -134,8 +174,11 @@ namespace ThAmCo.Events.Controllers
         }
 
         // POST: Events/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Binds data to view model, projects into event, adds event to context and saves changes to db
+        /// </summary>
+        /// <param name="eventVm">View model recieved from create event view</param>
+        /// <returns>If success</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Date,Duration,Type")] EventViewModel eventVm)
@@ -163,6 +206,11 @@ namespace ThAmCo.Events.Controllers
         }
 
         // GET: Events/Edit/5
+        /// <summary>
+        /// Edits an event by getting event from dbcontext, and projects into new event edit viewmodel for view
+        /// </summary>
+        /// <param name="id">Id of event</param>
+        /// <returns>If success</returns>
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -187,8 +235,12 @@ namespace ThAmCo.Events.Controllers
         }
 
         // POST: Events/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Edits event by getting database object and updating just the title and duration, and saving changes.
+        /// </summary>
+        /// <param name="id">Id of event</param>
+        /// <param name="eventVm">Object with new values</param>
+        /// <returns>If success</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Duration")] EventEditViewModel eventVm)
@@ -226,6 +278,11 @@ namespace ThAmCo.Events.Controllers
         }
 
         // GET: Events/Delete/5
+        /// <summary>
+        /// Delete an event, by projecting data into model and pushing to view.
+        /// </summary>
+        /// <param name="id">Id of event</param>
+        /// <returns>If success</returns>
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -255,6 +312,12 @@ namespace ThAmCo.Events.Controllers
         }
 
         // POST: Events/Delete/5
+        /// <summary>
+        /// Deletes an event, by getting event from dbcontext, removing and saving changes to db.
+        /// Method also calls reservation web service to clear any venues it may have booked for the future.
+        /// </summary>
+        /// <param name="id">Id of event</param>
+        /// <returns>If success</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

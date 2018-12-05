@@ -22,12 +22,14 @@ namespace ThAmCo.Events.Models
         [Display(Name = "Guests")]
         public int NoOfGuests { get; set; }
 
-        [DisplayFormat(DataFormatString = @"{0:hh\:mm}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = @"{0:hh\:mm}")]
         public TimeSpan? Duration { get; set; }
 
         [Required, MaxLength(3), MinLength(3)]
         public string Type { get; set; }
 
         public IEnumerable<EventGuestViewModel> Guests { get; set; }
+
+        public IEnumerable<EventStaffViewModel> Staff { get; set; }
     }
 }

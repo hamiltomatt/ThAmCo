@@ -75,7 +75,8 @@ namespace ThAmCo.Events.Data
                 );
 
                 builder.Entity<Staff>().HasData(
-                    new Staff { Id = 1, Surname = "Foreman", FirstName = "Dan", Email = "dan@example.com" }
+                    new Staff { Id = 1, Surname = "Foreman", FirstName = "Dan", Email = "dan@example.com", IsFirstAider = false },
+                    new Staff { Id = 2, Surname = "Hamilton", FirstName = "Matthew", Email  ="hamilton@outlook.com", IsFirstAider = true}
                 );
 
                 builder.Entity<GuestBooking>().HasData(
@@ -83,6 +84,10 @@ namespace ThAmCo.Events.Data
                     new GuestBooking { CustomerId = 2, EventId = 1, Attended = false },
                     new GuestBooking { CustomerId = 1, EventId = 2, Attended = false },
                     new GuestBooking { CustomerId = 3, EventId = 2, Attended = false }
+                );
+
+                builder.Entity<Staffing>().HasData(
+                    new Staffing { StaffId = 1, EventId = 1 }
                 );
             }
         }

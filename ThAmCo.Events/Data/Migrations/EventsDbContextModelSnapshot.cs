@@ -120,7 +120,8 @@ namespace ThAmCo.Events.Data.Migrations
                     b.ToTable("Staff");
 
                     b.HasData(
-                        new { Id = 1, Email = "dan@example.com", FirstName = "Dan", IsFirstAider = false, Surname = "Man" }
+                        new { Id = 1, Email = "dan@example.com", FirstName = "Dan", IsFirstAider = false, Surname = "Foreman" },
+                        new { Id = 2, Email = "hamilton@outlook.com", FirstName = "Matthew", IsFirstAider = true, Surname = "Hamilton" }
                     );
                 });
 
@@ -135,6 +136,10 @@ namespace ThAmCo.Events.Data.Migrations
                     b.HasIndex("EventId");
 
                     b.ToTable("Staffings");
+
+                    b.HasData(
+                        new { StaffId = 1, EventId = 1 }
+                    );
                 });
 
             modelBuilder.Entity("ThAmCo.Events.Data.GuestBooking", b =>
@@ -153,7 +158,7 @@ namespace ThAmCo.Events.Data.Migrations
             modelBuilder.Entity("ThAmCo.Events.Data.Staffing", b =>
                 {
                     b.HasOne("ThAmCo.Events.Data.Event", "Event")
-                        .WithMany()
+                        .WithMany("Staffings")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade);
 
