@@ -14,10 +14,6 @@ namespace ThAmCo.Events.Controllers
     {
         private readonly EventsDbContext _context;
 
-        /// <summary>
-        /// Constructor, supplies event with database context
-        /// </summary>
-        /// <param name="context"></param>
         public GuestBookingsController(EventsDbContext context)
         {
             _context = context;
@@ -26,7 +22,7 @@ namespace ThAmCo.Events.Controllers
         // GET: GuestBookings/Create/5
         /// <summary>
         /// Create a booking for a customer, where it gets all events customer is not registered as a guest on,
-        /// populates that into SelectList, and gives it into view model in view
+        /// populates that into SelectList, and gives to the view model.
         /// </summary>
         /// <param name="customerId">Id of customer</param>
         /// <returns>If success</returns>

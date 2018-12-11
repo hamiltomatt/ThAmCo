@@ -14,10 +14,6 @@ namespace ThAmCo.Events
     {
         private readonly EventsDbContext _context;
 
-        /// <summary>
-        /// Constructs the controller by providing it with an entity framework context
-        /// </summary>
-        /// <param name="context">The EF context which will connect to the database</param>
         public CustomersController(EventsDbContext context)
         {
             _context = context;
@@ -26,7 +22,7 @@ namespace ThAmCo.Events
         // GET: Customers
         /// <summary>
         /// Creates a list of all customers by going into the database context, getting the Customer objects,
-        /// and then projecting those into a model appropriate for the Index view
+        /// and then projecting those into a model appropriate for the Index view.
         /// </summary>
         /// <returns>Task which returns if it was successful</returns>
         public async Task<IActionResult> Index()
@@ -82,7 +78,7 @@ namespace ThAmCo.Events
 
         // GET: Customers/Create
         /// <summary>
-        /// Calls the "Create" view, which will open a blank form.
+        /// Calls the "Create" view, leaving the fields empty for the user to fill.
         /// </summary>
         /// <returns>If method was success</returns>
         public IActionResult Create()

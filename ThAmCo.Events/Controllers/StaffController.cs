@@ -14,10 +14,6 @@ namespace ThAmCo.Events.Controllers
     {
         private readonly EventsDbContext _context;
 
-        /// <summary>
-        /// Constructor, supplies staff with database context
-        /// </summary>
-        /// <param name="context">DbContext which locates EF database</param>
         public StaffController(EventsDbContext context)
         {
             _context = context;

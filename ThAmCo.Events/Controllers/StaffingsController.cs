@@ -14,10 +14,6 @@ namespace ThAmCo.Events.Controllers
     {
         private readonly EventsDbContext _context;
 
-        /// <summary>
-        /// Constructor, supplies staff with database context
-        /// </summary>
-        /// <param name="context">EF database context</param>
         public StaffingsController(EventsDbContext context)
         {
             _context = context;
@@ -43,9 +39,9 @@ namespace ThAmCo.Events.Controllers
             staff.RemoveAll(s => currentStaff.Any(sf => sf.EventId == eventId));
 
             ////Removes staff that have bookings on the same day as given event
-            //var date = _context.Events.Find(eventId).Date;
-            //var unavailableStaff = _context.Staffings.Where(s => s.Event.Date == date).ToList();
-            //staff.RemoveAll(s => unavailableStaff.Any(sf => sf.Event.Date == date));
+            var date = _context.Events.Find(eventId).Date;
+            var unavailableStaff = _context.Staffings.Where(s => s.Event.Date == date).ToList();
+            staff.RemoveAll(s => unavailableStaff.Any(sf => sf.Event.Date == date));
 
             var sVm = new StaffingViewModel
             {
@@ -92,9 +88,9 @@ namespace ThAmCo.Events.Controllers
             var currentStaff = _context.Staffings.Where(s => s.EventId == sVm.EventId).ToList();
             staff.RemoveAll(s => currentStaff.Any(sf => sf.EventId == sVm.EventId));
             ////Removes staff that have bookings on the same day as given event
-            //var date = _context.Events.Find(sVm.EventId).Date;
-            //var unavailableStaff = _context.Staffings.Where(s => s.Event.Date == date).ToList();
-            //staff.RemoveAll(s => unavailableStaff.Any(sf => sf.Event.Date == date));
+            var date = _context.Events.Find(sVm.EventId).Date;
+            var unavailableStaff = _context.Staffings.Where(s => s.Event.Date == date).ToList();
+            staff.RemoveAll(s => unavailableStaff.Any(sf => sf.Event.Date == date));
             sVm = new StaffingViewModel
             {
                 EventName = _context.Events.Find(sVm.EventId).Title,

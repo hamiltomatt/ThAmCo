@@ -19,7 +19,7 @@ namespace ThAmCo.Events.Controllers
 
         /// <summary>
         /// Constructor which takes the context for the entity framework model, and the configuration file
-        /// which specifies the location of our WebAPI services.
+        /// which specifies the location of the Venues API.
         /// </summary>
         /// <param name="context">Database EF context</param>
         /// <param name="configuration">Local appsettings file</param>
