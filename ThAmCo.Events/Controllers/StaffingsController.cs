@@ -36,12 +36,7 @@ namespace ThAmCo.Events.Controllers
             //Removes staff members that are already assigned to given event
             var staff = _context.Staff.ToList();
             var currentStaff = _context.Staffings.Where(s => s.EventId == eventId).ToList();
-            staff.RemoveAll(s => currentStaff.Any(sf => sf.EventId == eventId));
-
-            ////Removes staff that have bookings on the same day as given event
-            var date = _context.Events.Find(eventId).Date;
-            var unavailableStaff = _context.Staffings.Where(s => s.Event.Date == date).ToList();
-            staff.RemoveAll(s => unavailableStaff.Any(sf => sf.Event.Date == date));
+            staff.RemoveAll(s => currentStaff.Any(sf => sf.StaffId == s.Id));
 
             var sVm = new StaffingViewModel
             {
@@ -86,11 +81,7 @@ namespace ThAmCo.Events.Controllers
             //Removes staff members that are already assigned to given event
             var staff = _context.Staff.ToList();
             var currentStaff = _context.Staffings.Where(s => s.EventId == sVm.EventId).ToList();
-            staff.RemoveAll(s => currentStaff.Any(sf => sf.EventId == sVm.EventId));
-            ////Removes staff that have bookings on the same day as given event
-            var date = _context.Events.Find(sVm.EventId).Date;
-            var unavailableStaff = _context.Staffings.Where(s => s.Event.Date == date).ToList();
-            staff.RemoveAll(s => unavailableStaff.Any(sf => sf.Event.Date == date));
+            staff.RemoveAll(s => currentStaff.Any(sf => sf.StaffId == s.Id));
             sVm = new StaffingViewModel
             {
                 EventName = _context.Events.Find(sVm.EventId).Title,
