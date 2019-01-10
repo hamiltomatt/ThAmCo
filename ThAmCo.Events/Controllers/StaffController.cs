@@ -19,6 +19,32 @@ namespace ThAmCo.Events.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// When error is found with events, show user an on-screen error to change this.
+        /// </summary>
+        private void GetEventErrors()
+        {
+            var events = _context.Events.ToList();
+            foreach (var e in events)
+            {
+                var staffings = _context.Staffings.Where(s => s.EventId == e.Id).ToList();
+                if (staffings.Any())
+                {
+                    if (!staffings.Any(s => _context.Staff.Find(s.StaffId).IsFirstAider == true))
+                    {
+                        ModelState.AddModelError("noFirstAider", "There is no first-aider assigned to " + e.Title);
+                    }
+
+                    var firstAiderCount = (staffings.Where(s => _context.Staff.Find(s.StaffId).IsFirstAider)).Count();
+                    if ((firstAiderCount / staffings.Count()) < 0.1)
+                    {
+                        ModelState.AddModelError("moreFirstAiders", "At least 1 first-aider needs to be assigned to " +
+                            e.Title + " per 10 guests");
+                    }
+                }
+            }
+        }
+
         // GET: Staff
         /// <summary>
         /// Gets all staff objects in list, displays as staff view model, sends to view
@@ -34,6 +60,8 @@ namespace ThAmCo.Events.Controllers
                 Email = s.Email,
                 IsFirstAider = s.IsFirstAider
             }).ToListAsync();
+
+            GetEventErrors();
 
             return View(staff);
         }
@@ -58,13 +86,22 @@ namespace ThAmCo.Events.Controllers
                 Surname = s.Surname,
                 FirstName = s.FirstName,
                 Email = s.Email,
-                IsFirstAider = s.IsFirstAider
+                IsFirstAider = s.IsFirstAider,
+                Staffings = s.Staffings.Select(e => new StaffEventViewModel
+                {
+                    StaffId = e.StaffId,
+                    EventId = e.EventId,
+                    EventName = e.Event.Title,
+                    EventDate = e.Event.Date
+                })
             }).FirstOrDefaultAsync(m => m.Id == id);
 
             if (staff == null)
             {
                 return NotFound();
             }
+
+            GetEventErrors();
 
             return View(staff);
         }

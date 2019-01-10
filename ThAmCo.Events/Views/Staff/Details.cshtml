@@ -6,34 +6,57 @@
 
 <h2>Staff Details</h2>
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Surname)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Surname)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.IsFirstAider)
-        </dt>
-        <dd>
-            @(Model.IsFirstAider?"Yes":"No")
-        </dd>
-    </dl>
+@if (Model.IsFirstAider == true)
+{
+    @if (ViewData.ModelState.Keys.Any(k => ViewData.ModelState[k].Errors.Any()))
+    {
+        <div class="alert alert-warning">
+            <button class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            @Html.ValidationSummary(false, "Warning: ")
+        </div>
+    }
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.FirstName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Surname)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Surname)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.IsFirstAider)
+            </dt>
+            <dd>
+                @(Model.IsFirstAider ? "Yes" : "No")
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-4">
+        @if (Model.Staffings.Any())
+        {
+            <partial name="_StaffEventList" for="Staffings" />
+        }
+        else
+        {
+            <h5>No current bookings.</h5>
+        }
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

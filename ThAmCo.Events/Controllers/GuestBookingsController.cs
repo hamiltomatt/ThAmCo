@@ -136,9 +136,9 @@ namespace ThAmCo.Events.Controllers
                 .Select(b => new GuestBookingViewModel
                 {
                     CustomerId = b.CustomerId,
-                    CustomerName = b.Customer.FullName,
+                    CustomerName = _context.Customers.Find(b.CustomerId).FullName,
                     EventId = b.EventId,
-                    EventName = b.Event.Title,
+                    EventName = _context.Events.Find(b.EventId).Title,
                 }).FirstOrDefaultAsync(c => c.CustomerId == id && c.EventId == eventId);
 
             if(booking == null)

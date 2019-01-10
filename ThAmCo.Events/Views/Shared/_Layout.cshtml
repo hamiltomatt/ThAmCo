@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ThAmCo.Events</title>
+    <title>@ViewData["Title"] - 3Amigos</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -26,11 +26,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ThAmCo.Events</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand" style="font-size: x-large">3Amigos</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    @*<li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>*@
                     <li><a asp-area="" asp-controller="Events" asp-action="Index">Events</a></li>
                     <li><a asp-area="" asp-controller="Customers" asp-action="Index">Customers</a></li>
                     <li><a asp-area="" asp-controller="Staff" asp-action="Index">Staff</a></li>
@@ -47,7 +47,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2018 - ThAmCo.Events</p>
+            <p>&copy; ThreeAmigos Corporation - 2019</p>
         </footer>
     </div>
 

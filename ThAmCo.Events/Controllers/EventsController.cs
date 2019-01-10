@@ -150,10 +150,24 @@ namespace ThAmCo.Events.Controllers
                 })
             }).FirstOrDefaultAsync(e => e.Id == id);
 
-
             if (@event == null)
             {
                 return NotFound();
+            }
+
+            if (@event.Staff.Any())
+            {
+                if (!@event.Staff.Any(s => _context.Staff.Find(s.StaffId).IsFirstAider == true))
+                {
+                    ModelState.AddModelError("noFirstAider", "There is no first-aider assigned");
+                }
+
+                var firstAiderCount = (@event.Staff.Where(s => _context.Staff.Find(s.StaffId).IsFirstAider)).Count();
+                if ((firstAiderCount / @event.Staff.Count()) < 0.1)
+                {
+                    ModelState.AddModelError("moreFirstAiders", "At least 1 first-aider needs to be assigned" +
+                        " per 10 guests");
+                }
             }
 
             return View(@event);

@@ -10,7 +10,7 @@ using ThAmCo.Events.Data;
 namespace ThAmCo.Events.Data.Migrations
 {
     [DbContext(typeof(EventsDbContext))]
-    [Migration("20181205111154_AddStaff")]
+    [Migration("20190110023925_AddStaff")]
     partial class AddStaff
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -1,5 +1,12 @@
 ﻿@model IEnumerable<ThAmCo.Events.Models.EventStaffViewModel>
 
+@if (ViewData.ModelState.Keys.Any(k=> ViewData.ModelState[k].Errors.Any()))
+{
+    <div class="alert alert-warning">
+        <button class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        @Html.ValidationSummary(false, "Warning: ")
+    </div>
+}
 <table class="table">
     <thead>
         <tr>
@@ -10,16 +17,17 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StaffName)
-            </td>
-            <td>
-                @Html.ActionLink("Remove", "Delete", "Staffings", new { id = item.StaffId, eventId = item.EventId }) |
-                @Html.ActionLink("Details", "Details", "Staff", new { id = item.StaffId })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StaffName)
+                </td>
+                <td>
+                    @Html.ActionLink("Remove", "Delete", "Staffings", new { id = item.StaffId, eventId = item.EventId }) |
+                    @Html.ActionLink("Details", "Details", "Staff", new { id = item.StaffId })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
