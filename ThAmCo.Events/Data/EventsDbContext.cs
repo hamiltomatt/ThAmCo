@@ -70,8 +70,8 @@ namespace ThAmCo.Events.Data
                 );
 
                 builder.Entity<Event>().HasData(
-                    new Event { Id = 1, Title = "Bob's Big 50", Date = new DateTime(2018, 12, 5), Duration = new TimeSpan(6, 0, 0), TypeId = "PTY" },
-                    new Event { Id = 2, Title = "Best Wedding Yet", Date = new DateTime(2018, 12, 1), Duration = new TimeSpan(12, 0, 0), TypeId = "WED" }
+                    new Event { Id = 1, IsActive = true, Title = "Bob's Big 50", Date = new DateTime(2018, 12, 5), Duration = new TimeSpan(6, 0, 0), TypeId = "PTY" },
+                    new Event { Id = 2, IsActive = true, Title = "Best Wedding Yet", Date = new DateTime(2018, 12, 1), Duration = new TimeSpan(12, 0, 0), TypeId = "WED" }
                 );
 
                 builder.Entity<Staff>().HasData(

@@ -7,5 +7,6 @@ namespace ThAmCo.Catering.Data
 {
     public class FoodBooking
     {
+        public int Id { get; set; }
     }
 }

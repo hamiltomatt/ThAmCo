@@ -95,7 +95,7 @@ namespace ThAmCo.Events.Controllers
         {
             IEnumerable<EventTypeGetDto> eventTypes = await getEventTypes();
 
-            var events = await _context.Events.Select(e => new EventViewModel
+            var events = await _context.Events.Where(e => e.IsActive).Select(e => new EventViewModel
             {
                 Id = e.Id,
                 Title = e.Title,
@@ -126,7 +126,7 @@ namespace ThAmCo.Events.Controllers
 
             IEnumerable<EventTypeGetDto> eventTypes = await getEventTypes();
 
-            var @event = await _context.Events.Select(e => new EventDetailsViewModel
+            var @event = await _context.Events.Where(e => e.IsActive).Select(e => new EventDetailsViewModel
             {
                 Id = e.Id,
                 Title = e.Title,
@@ -201,6 +201,7 @@ namespace ThAmCo.Events.Controllers
             {
                 var @event = new Event()
                 {
+                    IsActive = true,
                     Title = eventVm.Title,
                     Date = eventVm.Date,
                     Duration = eventVm.Duration,
@@ -233,7 +234,7 @@ namespace ThAmCo.Events.Controllers
             }
 
             var @event = await _context.Events.FindAsync(id);
-            if (@event == null)
+            if (@event == null || !@event.IsActive)
             {
                 return NotFound();
             }
@@ -269,6 +270,7 @@ namespace ThAmCo.Events.Controllers
                 try
                 {
                     var @event = await _context.Events.FindAsync(id);
+                    @event.IsActive = true;
                     @event.Title = eventVm.Title;
                     @event.Duration = eventVm.Duration;
 
@@ -306,7 +308,7 @@ namespace ThAmCo.Events.Controllers
 
             IEnumerable<EventTypeGetDto> eventTypes = await getEventTypes();
 
-            var @event = await _context.Events.Select(e => new EventViewModel
+            var @event = await _context.Events.Where(e => e.IsActive).Select(e => new EventViewModel
             {
                 Id = e.Id,
                 Title = e.Title,
@@ -355,7 +357,8 @@ namespace ThAmCo.Events.Controllers
                 }
             }
 
-            _context.Events.Remove(@event);
+            //_context.Events.Remove(@event);
+            @event.IsActive = false;
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
