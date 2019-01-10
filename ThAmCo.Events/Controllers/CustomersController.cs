@@ -27,7 +27,7 @@ namespace ThAmCo.Events
         /// <returns>Task which returns if it was successful</returns>
         public async Task<IActionResult> Index()
         {
-            var customers = await _context.Customers.Select(c => new CustomerViewModel
+            var customers = await _context.Customers.Where(c => c.IsActive).Select(c => new CustomerViewModel
             {
                 Id = c.Id,
                 Surname = c.Surname,
@@ -52,7 +52,7 @@ namespace ThAmCo.Events
                 return NotFound();
             }
 
-            var customer = await _context.Customers.Select(c => new CustomerDetailsViewModel
+            var customer = await _context.Customers.Where(c => c.IsActive).Select(c => new CustomerDetailsViewModel
             {
                 Id = c.Id,
                 Surname = c.Surname,
@@ -103,6 +103,7 @@ namespace ThAmCo.Events
             {
                 var customer = new Customer()
                 {
+                    IsActive = true,
                     Id = customerVm.Id,
                     Surname = customerVm.Surname,
                     FirstName = customerVm.FirstName,
@@ -129,7 +130,7 @@ namespace ThAmCo.Events
                 return NotFound();
             }
 
-            var customer = await _context.Customers.Select(c => new CustomerViewModel
+            var customer = await _context.Customers.Where(c => c.IsActive).Select(c => new CustomerViewModel
             {
                 Id = c.Id,
                 Surname = c.Surname,
@@ -169,6 +170,7 @@ namespace ThAmCo.Events
                 {
                     var customer = new Customer()
                     {
+                        IsActive = true,
                         Id = customerVm.Id,
                         Surname = customerVm.Surname,
                         FirstName = customerVm.FirstName,
@@ -207,7 +209,7 @@ namespace ThAmCo.Events
                 return NotFound();
             }
 
-            var customer = await _context.Customers.Select(c => new CustomerViewModel
+            var customer = await _context.Customers.Where(c => c.IsActive).Select(c => new CustomerViewModel
             {
                 Id = c.Id,
                 Surname = c.Surname,
@@ -225,8 +227,8 @@ namespace ThAmCo.Events
 
         // POST: Customers/Delete/5
         /// <summary>
-        /// Gets id back from view, and removes relevant customer from database context, saves changes and redirects
-        /// to customer index.
+        /// Gets id back from view, and removes relevant customer from database context through a soft delete,
+        /// saves changes and redirects to customer index.
         /// </summary>
         /// <param name="id">Id of customer</param>
         /// <returns>If operation was successful</returns>
@@ -235,7 +237,10 @@ namespace ThAmCo.Events
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
-            _context.Customers.Remove(customer);
+            customer.IsActive = false;
+            customer.FirstName = "anon";
+            customer.Surname = "anon";
+            customer.Email = "anon";
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

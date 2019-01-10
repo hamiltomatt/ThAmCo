@@ -64,9 +64,9 @@ namespace ThAmCo.Events.Data
             if (HostEnv != null && HostEnv.IsDevelopment())
             {
                 builder.Entity<Customer>().HasData(
-                    new Customer { Id = 1, Surname = "Robertson", FirstName = "Robert", Email = "bob@example.com" },
-                    new Customer { Id = 2, Surname = "Thornton", FirstName = "Betty", Email = "betty@example.com" },
-                    new Customer { Id = 3, Surname = "Jellybeans", FirstName = "Jin", Email = "jin@example.com" }
+                    new Customer { Id = 1, IsActive = true, Surname = "Robertson", FirstName = "Robert", Email = "bob@example.com" },
+                    new Customer { Id = 2, IsActive = true, Surname = "Thornton", FirstName = "Betty", Email = "betty@example.com" },
+                    new Customer { Id = 3, IsActive = true, Surname = "Jellybeans", FirstName = "Jin", Email = "jin@example.com" }
                 );
 
                 builder.Entity<Event>().HasData(

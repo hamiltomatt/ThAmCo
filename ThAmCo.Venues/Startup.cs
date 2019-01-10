@@ -33,6 +33,8 @@ namespace ThAmCo.Venues
                 var cs = Configuration.GetConnectionString("VenuesSqlConnection");
                 options.UseSqlServer(cs);
             });
+
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +45,7 @@ namespace ThAmCo.Venues
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(builder => builder.WithOrigins(Configuration["EventsBaseURI"]));
             app.UseMvc();
         }
     }

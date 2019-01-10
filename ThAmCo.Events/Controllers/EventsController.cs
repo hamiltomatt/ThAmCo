@@ -329,8 +329,9 @@ namespace ThAmCo.Events.Controllers
 
         // POST: Events/Delete/5
         /// <summary>
-        /// Deletes an event, by getting event from dbcontext, removing and saving changes to db.
-        /// Method also calls reservation web service to clear any venues it may have booked for the future.
+        /// Soft deletes an event marking it as inactive, by getting event from dbcontext, changing and saving
+        /// changes to db. Method also calls reservation web service to clear any venues it may have booked for
+        /// the future.
         /// </summary>
         /// <param name="id">Id of event</param>
         /// <returns>If success</returns>
@@ -357,7 +358,15 @@ namespace ThAmCo.Events.Controllers
                 }
             }
 
-            //_context.Events.Remove(@event);
+            if(@event.Staffings != null)
+            {
+                foreach(var st in @event.Staffings)
+                {
+                    _context.Staffings.Remove(st);
+                }
+            }
+
+
             @event.IsActive = false;
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
